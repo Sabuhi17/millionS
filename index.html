@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050826">
+<title>Milyonçu — Sosial siyasət</title>
+<meta name="description" content="Sosial siyasətin elmi-nəzəri və metodoloji əsasları mövzusu üzrə «Milyonçu» bilik yarışı.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%8E%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#03051c; --navy:#0a1050; --royal:#1b25a8; --glow:#7f90ff; --silver:#c9d3ff;
+  --orange:#ff9d1c; --gold:#ffd35c; --green:#25c45f; --red:#e04a52;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:"Montserrat","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+  color:#fff; background:#02030f; -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit}
+[hidden]{display:none!important}
+
+/* ---------- Səhnə ---------- */
+.stage{
+  position:relative; min-height:100vh; min-height:100dvh; overflow:hidden;
+  background:radial-gradient(120% 80% at 50% 8%, #2a1f9e 0%, #14136a 32%, #070a38 62%, #02030f 100%);
+}
+.beams{
+  position:absolute; inset:0; pointer-events:none;
+  background:repeating-conic-gradient(from -20deg at 50% -8%, rgba(139,153,255,.13) 0deg 4deg, transparent 4deg 13deg);
+  -webkit-mask-image:radial-gradient(90% 70% at 50% 0%, #000, transparent 75%);
+          mask-image:radial-gradient(90% 70% at 50% 0%, #000, transparent 75%);
+}
+main{position:relative; z-index:1; min-height:100vh; min-height:100dvh}
+.screen{display:none; min-height:100vh; min-height:100dvh}
+.screen.active{display:flex}
+#screen-game.active{display:grid}
+
+/* ---------- Ümumi düymələr ---------- */
+.cta{
+  --cut:22px; appearance:none; border:0; cursor:pointer; color:#1a0f00;
+  font-weight:800; font-size:1.1rem; padding:1rem 3.2rem; letter-spacing:.02em;
+  background:linear-gradient(180deg,#ffc55a,#ff8a00);
+  clip-path:polygon(var(--cut) 0,calc(100% - var(--cut)) 0,100% 50%,calc(100% - var(--cut)) 100%,var(--cut) 100%,0 50%);
+  transition:filter .15s, transform .15s;
+}
+.cta:hover{filter:brightness(1.12)}
+.cta:active{transform:scale(.98)}
+.cta.small{font-size:.95rem; padding:.8rem 2rem}
+.cta:focus-visible,.ghost:focus-visible,.chip:focus-visible,.ll:focus-visible{outline:3px solid #fff; outline-offset:3px}
+.ghost{
+  appearance:none; cursor:pointer; background:transparent; color:var(--silver);
+  border:2px solid #6f81f0; border-radius:999px; padding:.75rem 1.6rem; font-weight:700; font-size:.95rem;
+}
+.ghost:hover{border-color:var(--orange); color:#fff}
+
+/* ---------- Başlanğıc və nəticə ekranları ---------- */
+#screen-start,#screen-end{
+  flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:28px 18px; gap:20px;
+}
+.logo{position:relative; width:min(560px,92vw); aspect-ratio:2/1.05; display:grid; place-items:center}
+.logo::before,.logo::after{content:""; position:absolute; border-radius:50%}
+.logo::before{
+  inset:0; border:3px solid #b9c6ff;
+  box-shadow:0 0 34px rgba(127,144,255,.65), inset 0 0 40px rgba(127,144,255,.35);
+  background:radial-gradient(closest-side,#1a1fa5 0%,#0a0f55 70%,#060a3a 100%);
+}
+.logo::after{inset:12px; border:2px solid rgba(255,157,28,.85)}
+.logo-in{position:relative; z-index:1}
+.logo h1{
+  margin:0; font-weight:900; letter-spacing:.06em; line-height:1;
+  font-size:clamp(2.2rem,8vw,4.4rem); text-shadow:0 0 22px rgba(255,157,28,.55);
+}
+.logo p{margin:.6rem 0 0; color:var(--gold); font-weight:700; letter-spacing:.14em; font-size:clamp(.8rem,2.4vw,1.05rem)}
+.lead{margin:0; max-width:560px; color:var(--silver); font-weight:600; line-height:1.5}
+.rules{
+  list-style:none; margin:0; padding:0; display:grid; gap:.55rem; max-width:540px; text-align:left;
+  font-weight:600; color:#e4e9ff; line-height:1.45;
+}
+.rules li{position:relative; padding-left:1.5rem}
+.rules li::before{content:""; position:absolute; left:.1rem; top:.45em; width:.6rem; height:.6rem; background:var(--orange); transform:rotate(45deg)}
+.meta{margin:0; color:#98a8ff; font-size:.85rem; font-weight:600}
+.linkbtn{background:none; border:0; color:var(--silver); text-decoration:underline; cursor:pointer; font-weight:600; font-size:.85rem; padding:.2rem}
+.linkbtn:hover{color:#fff}
+
+/* ---------- Oyun ekranı ---------- */
+#screen-game{
+  width:min(1200px,100%); margin:0 auto; gap:18px;
+  padding:clamp(10px,2vw,22px);
+  grid-template-columns:minmax(0,1fr) 290px;
+}
+.play{display:flex; flex-direction:column; min-height:calc(100vh - 44px); min-height:calc(100dvh - 44px); min-width:0}
+.topbar{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+.lifelines,.tools{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.ll{
+  position:relative; width:74px; height:46px; border-radius:999px; cursor:pointer; color:#fff;
+  border:2px solid #b9c6ff; background:radial-gradient(closest-side,#2b36c9,#0a1050);
+  display:grid; place-items:center; font-weight:800; font-size:.95rem; transition:border-color .15s, transform .15s;
+}
+.ll svg{width:24px; height:24px; fill:currentColor}
+.ll:hover:not(:disabled){border-color:var(--orange); transform:translateY(-1px)}
+.ll:disabled{cursor:not-allowed}
+.ll.used{opacity:.5; border-color:#7683d6}
+.ll.used::after{
+  content:""; position:absolute; inset:-2px; border-radius:999px;
+  background:
+    linear-gradient(to top right,transparent calc(50% - 2px),#ff5259 calc(50% - 2px),#ff5259 calc(50% + 2px),transparent calc(50% + 2px)),
+    linear-gradient(to bottom right,transparent calc(50% - 2px),#ff5259 calc(50% - 2px),#ff5259 calc(50% + 2px),transparent calc(50% + 2px));
+}
+.chip{
+  appearance:none; cursor:pointer; color:#dfe5ff; border:2px solid #6f81f0; background:rgba(8,12,70,.7);
+  border-radius:999px; padding:.55rem 1rem; font-weight:700; font-size:.85rem;
+}
+.chip:hover:not(:disabled){border-color:var(--orange); color:#fff}
+.chip:disabled{opacity:.4; cursor:not-allowed}
+#btnLadder{display:none}
+
+.mid{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:14px 0}
+.timer{position:relative; width:clamp(78px,11vw,104px); aspect-ratio:1; --tc:#9fb0ff}
+.timer svg{width:100%; height:100%; transform:rotate(-90deg); overflow:visible}
+.timer .trk{fill:rgba(5,8,50,.85); stroke:rgba(140,155,255,.28); stroke-width:6}
+.timer .bar{
+  fill:none; stroke:var(--tc); stroke-width:6; stroke-linecap:round;
+  stroke-dasharray:276.46; stroke-dashoffset:0; filter:drop-shadow(0 0 6px var(--tc));
+}
+.timer .num{position:absolute; inset:0; display:grid; place-items:center; font-weight:900; font-size:clamp(1.6rem,4vw,2.3rem)}
+.timer.warn{--tc:var(--orange)}
+.timer.crit{--tc:var(--red)}
+.timer.crit .num{color:#ffb3b6; animation:pulse .5s ease-in-out infinite alternate}
+.qmeta{margin:0; display:flex; gap:14px; align-items:baseline; font-weight:800; font-size:clamp(1rem,2.4vw,1.25rem); color:var(--silver)}
+.qmeta #qp{color:var(--gold)}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.14)}}
+
+/* Altıbucaq (hex) forması */
+.slot{position:relative; z-index:1}
+.hex{
+  --cut:24px; --edge:linear-gradient(180deg,#d6deff,#6b7bd6);
+  --fill:linear-gradient(180deg,#171e7e,#070b3a);
+  display:block; width:100%; padding:3px; border:0; margin:0; cursor:pointer; text-align:left;
+  color:#fff; background:var(--edge);
+  clip-path:polygon(var(--cut) 0,calc(100% - var(--cut)) 0,100% 50%,calc(100% - var(--cut)) 100%,var(--cut) 100%,0 50%);
+}
+.hex .in{
+  display:flex; align-items:center; gap:.7rem; min-height:clamp(58px,8vw,72px);
+  padding:.55rem calc(var(--cut) + 8px); background:var(--fill);
+  clip-path:polygon(calc(var(--cut) - 1px) 0,calc(100% - var(--cut) + 1px) 0,calc(100% - 1px) 50%,calc(100% - var(--cut) + 1px) 100%,calc(var(--cut) - 1px) 100%,1px 50%);
+  transition:background .2s;
+}
+.hex:focus-visible{outline:none}
+.hex:focus-visible .in{box-shadow:inset 0 0 0 3px #fff}
+.hex .L{color:var(--orange); font-weight:800; flex:none}
+.hex .t{font-weight:600; font-size:clamp(.85rem,1.6vw,1.02rem); line-height:1.35}
+.qhex{cursor:default; --cut:30px}
+.qhex .in{min-height:clamp(84px,12vw,116px); justify-content:center; text-align:center}
+.qhex p{margin:0; font-weight:700; font-size:clamp(.98rem,2.2vw,1.42rem); line-height:1.4}
+
+.qrow,.arow{position:relative}
+.qrow::before,.arow::before{
+  content:""; position:absolute; left:-6%; right:-6%; top:50%; height:2px; z-index:0;
+  background:linear-gradient(90deg,transparent,#7f90ff 12%,#7f90ff 88%,transparent);
+}
+.qa{margin-top:auto; display:flex; flex-direction:column; gap:14px}
+.arow{display:grid; grid-template-columns:1fr 1fr; gap:14px 44px}
+.src{margin:-4px 0 0; min-height:1.3em; text-align:center; color:#98a8ff; font-size:.82rem; font-weight:600}
+
+/* Cavab vəziyyətləri */
+.slot .hex{transition:filter .2s}
+.arow .slot:not(.locked):not(.removed) .hex:hover{filter:brightness(1.2)}
+.slot.sel{filter:drop-shadow(0 0 12px rgba(255,157,28,.8))}
+.slot.sel .hex{--edge:linear-gradient(180deg,#ffe6b0,#ffb23e); --fill:linear-gradient(180deg,#ffb84a,#e07b00); color:#1a0f00}
+.slot.sel .hex .L{color:#3a2100}
+.slot.correct{filter:drop-shadow(0 0 14px rgba(37,196,95,.85))}
+.slot.correct .hex{--edge:linear-gradient(180deg,#c4ffd9,#25c45f); --fill:linear-gradient(180deg,#2fd26b,#0d8a3b); animation:blink .45s ease-in-out 4 alternate}
+.slot.correct .hex .L{color:#fff}
+.slot.wrong{filter:drop-shadow(0 0 14px rgba(224,74,82,.85))}
+.slot.wrong .hex{--edge:linear-gradient(180deg,#ffd0d3,#e04a52); --fill:linear-gradient(180deg,#e5484d,#8f1620)}
+.slot.wrong .hex .L{color:#fff}
+.slot.locked .hex{cursor:default}
+.slot.removed .hex{opacity:0; pointer-events:none}
+@keyframes blink{from{filter:brightness(1)}to{filter:brightness(1.55)}}
+
+/* Pul pilləkəni */
+.ladder{align-self:center; width:100%}
+.ladder ol{
+  list-style:none; margin:0; padding:10px; display:flex; flex-direction:column-reverse; gap:3px;
+  background:linear-gradient(180deg,rgba(10,16,80,.88),rgba(4,6,36,.92));
+  border:2px solid #4a5bd0; border-radius:14px; box-shadow:0 0 30px rgba(60,80,220,.35);
+}
+.ladder li{
+  display:grid; grid-template-columns:34px 1fr; align-items:center; gap:6px;
+  padding:.34rem .7rem; border-radius:6px; color:var(--orange); font-weight:800; font-size:.95rem;
+}
+.ladder li .p{text-align:right; font-variant-numeric:tabular-nums}
+.ladder li.safe{color:#fff}
+.ladder li.done{opacity:.42}
+.ladder li.cur{background:linear-gradient(90deg,#ffb23e,#ff8a00); color:#1a0f00; opacity:1}
+#btnCloseLadder{display:none; margin:14px auto 0}
+
+/* Banner */
+.banner{
+  position:fixed; left:50%; top:36%; z-index:40; pointer-events:none; opacity:0;
+  transform:translate(-50%,-50%) scale(.9); transition:opacity .25s, transform .25s;
+  --cut:28px; padding:1rem 3.4rem; font-weight:900; font-size:clamp(1.2rem,4vw,2rem); text-align:center; white-space:nowrap;
+  background:linear-gradient(180deg,#2fd26b,#0d8a3b);
+  clip-path:polygon(var(--cut) 0,calc(100% - var(--cut)) 0,100% 50%,calc(100% - var(--cut)) 100%,var(--cut) 100%,0 50%);
+}
+.banner.bad{background:linear-gradient(180deg,#e5484d,#8f1620)}
+.banner.show{opacity:1; transform:translate(-50%,-50%) scale(1)}
+
+/* Modal */
+.modal{position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center; padding:18px; background:rgba(2,3,15,.78); backdrop-filter:blur(3px)}
+.modal-card{
+  width:min(480px,100%); padding:26px 24px; text-align:center; border-radius:18px;
+  background:linear-gradient(180deg,#151c86,#070b3a); border:2px solid #7f90ff;
+  box-shadow:0 0 50px rgba(80,100,255,.45);
+}
+.modal-card h3{margin:0 0 14px; font-size:1.25rem; font-weight:800}
+.modal-card p{margin:0 0 18px; line-height:1.5; color:#e4e9ff; font-weight:600}
+.btnrow{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+.ringer{width:78px; height:78px; margin:0 auto 14px; border-radius:50%; display:grid; place-items:center; background:radial-gradient(closest-side,#2b36c9,#0a1050); border:2px solid #b9c6ff; animation:shake .5s linear infinite}
+.ringer svg{width:38px; height:38px; fill:#fff}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-12deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(8deg)}}
+.bubble{margin:0 0 18px; padding:14px 16px; text-align:left; border-radius:14px; background:rgba(127,144,255,.16); border:1px solid rgba(127,144,255,.5); line-height:1.5; font-weight:600}
+.bubble b{display:block; margin-bottom:4px; color:var(--gold)}
+.bars{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:6px 0 20px; align-items:end}
+.bcol{display:flex; flex-direction:column; align-items:center; gap:6px}
+.bcol .pct{font-weight:800; font-size:1.05rem}
+.bcol .bar{width:100%; max-width:64px; height:150px; display:flex; align-items:flex-end; background:rgba(255,255,255,.07); border-radius:8px 8px 0 0; overflow:hidden}
+.bcol .bar i{display:block; width:100%; height:0; background:linear-gradient(180deg,#ffb23e,#ff8a00); transition:height 1.2s cubic-bezier(.2,.8,.2,1)}
+.bcol b{color:var(--orange); font-weight:800}
+.bcol.off{opacity:.35}
+
+/* Nəticə */
+#screen-end h2{margin:0; font-weight:900; font-size:clamp(1.5rem,5vw,2.4rem); line-height:1.2}
+.amount{margin:0; font-weight:900; font-size:clamp(2.4rem,9vw,4.6rem); color:var(--gold); text-shadow:0 0 26px rgba(255,157,28,.5)}
+.review{width:min(620px,100%); text-align:left; padding:16px 20px; border-radius:14px; background:rgba(8,12,70,.7); border:1px solid rgba(127,144,255,.5); line-height:1.5}
+.review p{margin:0 0 8px; font-weight:600}
+.review p:last-child{margin:0}
+.review .ok{color:#7dffae}
+.review .no{color:#ff9aa0}
+.review small{color:#98a8ff; font-weight:600}
+.confetti{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:5}
+.confetti span{position:absolute; top:-16px; width:9px; height:15px; opacity:.95; animation:fall linear forwards}
+@keyframes fall{to{transform:translate3d(var(--dx),110vh,0) rotate(720deg)}}
+
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+noscript p{position:relative; z-index:2; padding:20px; text-align:center}
+
+/* ---------- Mobil ---------- */
+@media (max-width:920px){
+  #screen-game{grid-template-columns:minmax(0,1fr)}
+  #btnLadder{display:inline-block}
+  .ladder{
+    position:fixed; inset:0; z-index:30; display:none; flex-direction:column; align-items:center; justify-content:center;
+    padding:16px; background:rgba(2,3,15,.88); overflow:auto;
+  }
+  .ladder.open{display:flex}
+  .ladder ol{width:min(340px,100%)}
+  #btnCloseLadder{display:inline-block}
+}
+@media (max-width:700px){
+  .arow{grid-template-columns:1fr; gap:10px}
+  .qrow::before,.arow::before{display:none}
+  .hex,.qhex{--cut:16px}
+  .ll{width:62px; height:42px}
+  .banner{padding:.9rem 2.2rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important; transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="beams" aria-hidden="true"></div>
+
+  <main>
+    <!-- BAŞLANĞIC -->
+    <section id="screen-start" class="screen active" aria-labelledby="title">
+      <div class="logo">
+        <div class="logo-in">
+          <h1 id="title">MİLYONÇU</h1>
+          <p>Sosial siyasət</p>
+        </div>
+      </div>
+      <p class="lead">Mövzu 1. Sosial siyasətin elmi-nəzəri və metodoloji əsasları üzrə bilik yarışı</p>
+      <ul class="rules">
+        <li>15 sual: çətinlik getdikcə artır, mükafat 100 ₼-dən 1 000 000 ₼-ə qədərdir.</li>
+        <li>Hər suala cavab üçün 15 saniyə var.</li>
+        <li>3 yardım: 50:50, dosta zəng və auditoriya. Hər biri yalnız bir dəfə istifadə olunur.</li>
+        <li>5-ci sualdan sonra 1 000 ₼, 10-cu sualdan sonra 32 000 ₼ sığortalanır.</li>
+        <li>Klaviaturada A, B, C, D (və ya 1–4) düymələri ilə də cavab vermək olar.</li>
+      </ul>
+      <button class="cta" id="btnStart">Oyuna başla</button>
+      <p class="meta" id="bankInfo"></p>
+      <button class="linkbtn" id="btnResetBank" type="button">Sual bazasını sıfırla</button>
+    </section>
+
+    <!-- OYUN -->
+    <section id="screen-game" class="screen" aria-label="Oyun">
+      <div class="play">
+        <div class="topbar">
+          <div class="lifelines">
+            <button class="ll" id="llFifty" type="button" title="50:50: iki səhv cavab silinir" aria-label="50:50"><span>50:50</span></button>
+            <button class="ll" id="llPhone" type="button" title="Dosta zəng" aria-label="Dosta zəng">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>
+            </button>
+            <button class="ll" id="llAud" type="button" title="Auditoriya" aria-label="Auditoriya">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </button>
+          </div>
+          <div class="tools">
+            <button class="chip" id="btnLadder" type="button">Pillələr</button>
+            <button class="chip" id="btnWalk" type="button">Pulu götür</button>
+            <button class="chip" id="btnSound" type="button" aria-pressed="true">Səs: açıq</button>
+          </div>
+        </div>
+
+        <div class="mid">
+          <div class="timer" id="timer" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><circle class="trk" cx="50" cy="50" r="44"/><circle class="bar" id="tbar" cx="50" cy="50" r="44"/></svg>
+            <div class="num" id="tnum">15</div>
+          </div>
+          <p class="qmeta"><span id="qn">Sual 1 / 15</span><span id="qp">100 ₼</span></p>
+        </div>
+
+        <div class="qa">
+          <div class="qrow">
+            <div class="slot"><div class="hex qhex"><div class="in"><p id="qtext"></p></div></div></div>
+          </div>
+          <p class="src" id="src"></p>
+          <div class="arow">
+            <div class="slot" data-i="0"><button class="hex ans" type="button"><span class="in"><span class="L">A:</span><span class="t"></span></span></button></div>
+            <div class="slot" data-i="1"><button class="hex ans" type="button"><span class="in"><span class="L">B:</span><span class="t"></span></span></button></div>
+          </div>
+          <div class="arow">
+            <div class="slot" data-i="2"><button class="hex ans" type="button"><span class="in"><span class="L">C:</span><span class="t"></span></span></button></div>
+            <div class="slot" data-i="3"><button class="hex ans" type="button"><span class="in"><span class="L">D:</span><span class="t"></span></span></button></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="ladder" id="ladder" aria-label="Pul pilləkəni">
+        <ol id="ladderList"></ol>
+        <button class="ghost" id="btnCloseLadder" type="button">Bağla</button>
+      </aside>
+    </section>
+
+    <!-- NƏTİCƏ -->
+    <section id="screen-end" class="screen" aria-live="polite">
+      <h2 id="endTitle"></h2>
+      <p class="amount" id="endAmount"></p>
+      <p class="lead" id="endText"></p>
+      <div class="review" id="endReview" hidden></div>
+      <div class="btnrow">
+        <button class="cta" id="btnAgain" type="button">Yenidən oyna</button>
+        <button class="ghost" id="btnHome" type="button">Ana səhifə</button>
+      </div>
+      <p class="meta" id="endBest"></p>
+    </section>
+  </main>
+
+  <div class="banner" id="banner" aria-hidden="true"></div>
+  <div class="modal" id="modal" hidden><div class="modal-card" id="modalBody" role="dialog" aria-modal="true"></div></div>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <div class="sr" id="sr" role="status" aria-live="polite"></div>
+  <noscript><p>Bu oyun üçün JavaScript aktiv olmalıdır.</p></noscript>
+</div>
+
+<!-- =====================================================================
+     SUAL BAZASI: 15 səviyyə × 4 sual = 60 sual (mənbə: Mövzu 1 slaydları)
+     Q(sual, düzgünCavab, [səhv1, səhv2, səhv3], slaydNömrəsi)
+     Cavabların yeri oyun zamanı avtomatik qarışdırılır.
+     Hər oyunda hər səviyyədən 1 sual seçilir; bu cihazda görülən suallar
+     təkrar olunmur, 4 oyundan sonra dövr yenidən başlayır.
+     ===================================================================== -->
+<script>
+const Q = (q, ok, wrong, s) => ({ q, a: [ok, ...wrong], s });
+
+const BANK = [
+  // ---- 1-ci sual (100 ₼) ----
+  [
+    Q("Sosial siyasət insanların nəyi üçün zəruri olan sosial münasibətləri tədqiq edir?",
+      "Rifahı və əmin-amanlığı üçün", ["Yalnız hərbi gücü üçün", "Ticarət gəlirləri üçün", "Turizm imkanları üçün"], 2),
+    Q("Sosial siyasət akademik fənn kimi hansı xarakter daşıyır?",
+      "Fənlərarası", ["Yalnız iqtisadi", "Yalnız hüquqi", "Yalnız tarixi"], 2),
+    Q("Platon və Aristotel hansı dövrün alimləridir?",
+      "Qədim dövrün", ["Yeni dövrün", "Müasir dövrün", "XIX əsrin"], 7),
+    Q("Sosial siyasət dövlətin hansı siyasətinin tərkib hissəsidir?",
+      "Daxili siyasətinin", ["Xarici siyasətinin", "Hərbi siyasətinin", "Ticarət siyasətinin"], 5),
+  ],
+  // ---- 2-ci sual (200 ₼) ----
+  [
+    Q("Aşağıdakı elmlərdən hansına sosial siyasət öz müddəalarını əsaslandırmaq üçün müraciət edir?",
+      "Sosiologiya", ["Astronomiya", "Kimya", "Botanika"], 2),
+    Q("Sosial siyasətin əsas mövzusu nədir?",
+      "Əhalinin sosial vəziyyəti", ["Ölkənin xarici ticarət balansı", "Ordunun say tərkibi", "Torpaqların münbitliyi"], 15),
+    Q("Qədim dövrlərdə dövlətin vəzifəsinin öz əhalisinin qayğısına qalmaq olduğunu qəbul edən alimlər kimlərdir?",
+      "Platon və Aristotel", ["Amartya Sen və Ian Gough", "Len Doyal və O. Heffe", "Yalnız din xadimləri"], 7),
+    Q("XIX əsrin sonunda «Sosial siyasət dərnəyi»ndə birləşən alimlər hansı millətdən idi?",
+      "Alman", ["Fransız", "İngilis", "Rus"], 9),
+  ],
+  // ---- 3-cü sual (300 ₼) ----
+  [
+    Q("BMT Bəyannaməsinə görə sosial siyasətin əsas məqsədi kimdir?",
+      "İnsan", ["Dövlət büdcəsi", "Hərbi güc", "İstehsalat"], 16),
+    Q("Aristotel sosial ədalətin neçə tipi arasındakı ziddiyyətləri təhlil etmişdir?",
+      "İki", ["Üç", "Dörd", "Beş"], 18),
+    Q("Sosial həmrəylik prinsipinə görə müasir cəmiyyət sosial çətinlikləri necə qarşılamalıdır?",
+      "Vahid bir ailə kimi", ["Hər kəs təkbaşına", "Rəqabət qaydasında", "Yalnız dövlətin öhdəsinə buraxaraq"], 20),
+    Q("Fərdi sosial məsuliyyət prinsipi fərddən, ailədən və kiçik qrupdan nəyi tələb edir?",
+      "Özünəyardım və özünütəminat üçün maksimum səy", ["Bütün öhdəlikləri dövlətə ötürmək", "Yalnız vergi ödəmək", "Sosial yardımdan imtina etmək"], 20),
+  ],
+  // ---- 4-cü sual (500 ₼) ----
+  [
+    Q("Aşağıdakılardan hansı sosial siyasətin funksiyalarından biridir?",
+      "Əhalinin sosial müdafiəsi", ["Əhalinin sayının süni artırılması", "Ərzaq istehsalının idarə olunması", "İstehsal vasitələrinin özəlləşdirilməsi"], 25),
+    Q("Bacarıqlar konsepsiyasını irəli sürən müasir dövr filosofu kimdir?",
+      "Amartya Sen", ["Aristotel", "İ. Kant", "T. Hobbs"], 10),
+    Q("Aşağıdakılardan hansı sosial minimuma daxil olan ödənişlərdən biridir?",
+      "Ünvanlı sosial yardım", ["Səhm dividendləri", "Biznes kreditləri", "Ticarət güzəştləri"], 19),
+    Q("Aşağıdakılardan hansı sosial siyasəti həyata keçirən subyektlərdəndir?",
+      "İstehsal kollektivləri", ["Xarici diplomatik nümayəndəliklər", "Hərbi kəşfiyyat xidmətləri", "Beynəlxalq valyuta bazarı"], 17),
+  ],
+  // ---- 5-ci sual (1 000 ₼, sığorta) ----
+  [
+    Q("Slaydlara görə siyasətin təriflərindən biri hansıdır?",
+      "Hakimiyyətin əldə edilməsi və saxlanılması naminə qruplar, siniflər və dövlətlər arasında münasibətlər",
+      ["Bazar iqtisadiyyatında qiymətlərin formalaşması naminə şirkətlər arasında münasibətlər",
+       "Dövlət məmurlarının əmək intizamını təmin etmək naminə idarələr arasında münasibətlər",
+       "Torpaq mülkiyyətinin bölüşdürülməsi naminə icmalar arasında münasibətlər"], 4),
+    Q("Aristotelin «yaxşı həyat» anlayışına görə insan hansı halda xoşbəxt ola bilər?",
+      "Bütün bacarıq və qabiliyyətlərindən istifadə etdikdə",
+      ["Yalnız var-dövlət topladıqda", "Yalnız hakimiyyətə yiyələndikdə", "Bütün ehtiyacları dövlət ödədikdə"], 7),
+    Q("Sosial ədalətin bərabərləşdirici tipi nəyə əsaslanır?",
+      "Bərabər imkanlara", ["Şəxsi nailiyyətin qiymətləndirilməsinə", "Vergi dərəcəsinə", "Yaş həddinə"], 18),
+    Q("Sosial siyasətə daxil olan tədbirlər sisteminə aşağıdakılardan hansı aiddir?",
+      "Sosial proqramların həyata keçirilməsi", ["Ordunun silahlandırılması", "Xarici ticarətin liberallaşdırılması", "Sərhəd nəzarətinin gücləndirilməsi"], 13),
+  ],
+  // ---- 6-cı sual (2 000 ₼) ----
+  [
+    Q("BMT Baş Assambleyası Sosial tərəqqi və İnkişafa dair Bəyannaməni neçənci ildə qəbul etmişdir?",
+      "1969", ["1949", "1979", "1991"], 16),
+    Q("Aşağıdakılardan hansı sosial vəziyyəti formalaşdıran ictimai şərtlərdəndir?",
+      "Ekoloji təhlükəsizlik", ["Mədəni irs", "Dini bayramlar", "Ticarət balansı"], 15),
+    Q("Sosial zəmanətlər prinsipi dövlət tərəfindən hansı minimum xidmətlərin zəmanətli təklifini nəzərdə tutur?",
+      "Təhsil, peşə hazırlığı və rasional işlə təmin", ["Lüks mallar və avtomobil", "Turizm və əyləncə", "Xarici valyuta əməliyyatları"], 23),
+    Q("Sosial siyasət hansı ifadə ilə səciyyələndirilir?",
+      "Miqyaslı sosial texnologiya, sosial problemlərin həlli instrumenti",
+      ["Xarici ticarətin tənzimləyicisi", "Hüquqi normalar toplusu", "Beynəlxalq təhlükəsizlik sistemi"], 13),
+  ],
+  // ---- 7-ci sual (4 000 ₼) ----
+  [
+    Q("Amartya Senə görə yoxsulluq necə müəyyənləşdirilə bilər?",
+      "Bacarıqdan məhrum olma", ["Yalnız gəlirin azlığı", "Əmək qabiliyyətinin itirilməsi", "Sosial təbəqələrin olmaması"], 10),
+    Q("Doyal və Gough-a görə insan ehtiyaclarının əsas şərtləri hansılardır?",
+      "Fiziki sağlamlıq və şəxsi muxtariyyət", ["Hakimiyyət və mülkiyyət", "Qida və geyim", "Təhsil və məşğulluq"], 11),
+    Q("Sosial həmrəylik mexanizmi ilk növbədə nədə əksini tapır?",
+      "Pul vəsaitlərinin vergi və maddi yardım sistemi vasitəsilə yenidən bölüşdürülməsində",
+      ["Xarici borcların artırılması və ixracın stimullaşdırılmasında",
+       "Əmək haqlarının dondurulması və vergilərin azaldılmasında",
+       "Mülkiyyətin ləğv edilməsi və dövlətləşdirilməsində"], 20),
+    Q("Subsidiya prinsipinə görə dövlət orqanları sosial addımları maliyyələşdirərkən nəyə üstünlük verməlidir?",
+      "İctimai təşəbbüslərə", ["Xarici investorlara", "Yalnız dövlət müəssisələrinə", "İri korporasiyalara"], 23),
+  ],
+  // ---- 8-ci sual (8 000 ₼) ----
+  [
+    Q("Bölücü ədalətin çatışmazlığı hansıdır?",
+      "Daha çox səy göstərməyə köklənməmiş şəxsləri daha aşağı vəziyyətə qoyur",
+      ["Əsas tələbatların eyni təmin edilməsi nailiyyətə marağı azaldır", "Sosial minimumu tamamilə ləğv edir", "İnsanlara bərabər imkanlar yaratmır"], 19),
+    Q("Bərabərləşdirici ədalətin əsas riski hansıdır?",
+      "Əsas tələbatların eyni şəkildə təmin edilməsi fəaliyyətə, yaradıcılığa və nailiyyətə marağı azaldır",
+      ["Daha çox səy göstərməyə köklənməmişləri aşağı vəziyyətə qoyur", "Şəxsi əməyi həddindən artıq qiymətləndirir", "Sosial minimumu təmin etməyə imkan vermir"], 19),
+    Q("Sosial kompensasiya prinsipi nəyi təmin edir?",
+      "Maddi məhdudiyyətləri təmin etmək üçün zəruri hüquqi və sosial müdafiəni",
+      ["İctimai təşəbbüslərə maliyyə üstünlüyünü", "Fərdin özünütəminat öhdəliyini", "Vahid ailə kimi həmrəyliyi"], 22),
+    Q("O. Heffeyə görə dinc yanaşı yaşamanın legitim olması üçün birinci şərt hansıdır?",
+      "Hüquqi xarakterə malik olması", ["İqtisadi cəhətdən sərfəli olması", "Hərbi güclə təmin olunması", "Dini qaydalara əsaslanması"], 8),
+  ],
+  // ---- 9-cu sual (16 000 ₼) ----
+  [
+    Q("Sosial siyasətin ən əsas vəzifəsi nədir?",
+      "Cəmiyyətin bütövlüyünü, möhkəmliyini və dinamik inkişaf imkanlarını təmin etmək",
+      ["Dövlət gəlirlərini maksimum artırmaq", "Bütün vətəndaşların gəlirlərini bərabərləşdirmək", "İstehsalı şaxələndirmək"], 17),
+    Q("Siyasi rəhbərlik cəmiyyətin sosial inkişafının nəyini müəyyənləşdirir?",
+      "Məqsədlərini", ["Vergi dərəcələrini", "Sərhədlərini", "Əhali sayını"], 17),
+    Q("Aşağıdakılardan hansı Doyal və Gough-a görə əsas ehtiyacların «universal məqbul səciyyəsinə» daxildir?",
+      "Təhlükəsiz doğuma nəzarət", ["Şəxsi avtomobil", "Lüks istirahət xidmətləri", "Yüksək faizli əmanət"], 11),
+    Q("Sosial siyasətin funksiyalarından birinə görə sosial sferada ictimai ziddiyyətlərin optimal həlli ilə yanaşı hansı dialoq yaradılır?",
+      "Vətəndaşla dövlət arasında", ["Dövlətlə xarici investorlar arasında", "İşəgötürənlə xarici şirkət arasında", "Alimlərlə tələbələr arasında"], 25),
+  ],
+  // ---- 10-cu sual (32 000 ₼, sığorta) ----
+  [
+    Q("Amartya Senə görə «bacarıqlar» nə deməkdir?",
+      "İnsanın seçmək və dəyər verdiyi həyatı yaşamaq azadlığı",
+      ["İnsanın peşə bacarıqlarının cəmi", "İnsanın maddi sərvəti", "Dövlətin verdiyi minimum yardım"], 10),
+    Q("Senin arqumentinə görə hansı ifadə düzgündür?",
+      "Ehtiyacımız nisbidir, bacarıqlarımız mütləqdir",
+      ["Ehtiyacımız mütləqdir, bacarıqlarımız nisbidir", "Hər ikisi nisbidir", "Hər ikisi mütləqdir"], 10),
+    Q("Siyasətin təriflərinə görə hakimiyyət münasibətlərində kimlər iştirak edir?",
+      "Vətəndaşlar, siyasi xadimlər, ictimai təşkilatlar",
+      ["Yalnız siyasi partiyalar və deputatlar", "Dövlət başçıları və hərbçilər", "Sahibkarlar və bankirlər"], 4),
+    Q("Sosial vəziyyət nədir?",
+      "Əhalinin və onun tərkib hissələrinin həyat fəaliyyətinin kompleks səciyyəsi",
+      ["Dövlətin illik büdcə gəlirləri və xərclərinin nisbəti", "İşsizlik səviyyəsinin statistik göstəricisi", "Əhalinin orta yaş və cins tərkibi"], 15),
+  ],
+  // ---- 11-ci sual (64 000 ₼) ----
+  [
+    Q("Sosial ədalətin iki tipi hansı adlarla ifadə olunur?",
+      "Bərabərləşdirici və bölücü", ["Hüquqi və mənəvi", "Fərdi və kollektiv", "Kompensasiya və subsidiya"], 18),
+    Q("Doyal və Gough-un (1991) insan ehtiyacları nəzəriyyəsinin inkişafına kimin yanaşması təsir göstərmişdir?",
+      "Amartya Sen", ["O. Heffe", "G. Hegel", "Aristotel"], 11),
+    Q("Sosial siyasət geniş mənada nədir?",
+      "Cəmiyyətin sosial qrupları və təbəqələri arasındakı qarşılıqlı münasibətlər və qarşılıqlı təsir sistemi",
+      ["Əhalinin həyatının təminatına yönəlmiş konkret tədbirlər məcmusu",
+       "Yalnız dövlət proqramlarının icrası üzrə inzibati fəaliyyət",
+       "Pensiya və müavinətlərin hesablanması qaydalarının məcmusu"], 14),
+    Q("Sosial siyasətin öyrənilməsi zamanı tələb oluna bilən bacarıqlardan hansı slaydda göstərilməyib?",
+      "Beynəlxalq valyuta bazarını proqnozlaşdırmaq",
+      ["Statistik informasiyanın təhlilini bacarmaq", "Siyasətin uğurlarını və uğursuzluqlarını dəyərləndirmək", "Marginallaşmış və kövrək vəziyyətdə olanların vəziyyətini tədqiq etmək"], 3),
+  ],
+  // ---- 12-ci sual (125 000 ₼) ----
+  [
+    Q("Ev tapşırığında Leyla aztəminatlı ailələrə və işsiz şəxslərə nəyin təyin edilməsini təşkil edir?",
+      "Sosial yardımların", ["Kreditlərin", "İş yerlərinin", "Mənzillərin"], 26),
+    Q("Subsidiya prinsipi dövlət və qeyri-dövlət strukturları ilə bağlı nəyi nəzərdə tutur?",
+      "Onların sosial sferada qanunla nizamlanmasını və qeyri-dövlət strukturlarına dəstəyi",
+      ["Qeyri-dövlət strukturlarının ləğvini", "Yalnız dövlət strukturlarının maliyyələşdirilməsini", "Qeyri-dövlət strukturlarının vergidən tam azad edilməsini"], 23),
+    Q("XIX əsrin sonundan sonra sosial siyasət anlayışı hansı kontekstdə tədqiq edilməyə başladı?",
+      "Sosial dövlət haqqında təsəvvürlər kontekstində",
+      ["Beynəlxalq ticarət kontekstində", "Hərbi doktrinalar kontekstində", "Dini təriqətlər kontekstində"], 9),
+    Q("Aşağıdakılardan hansı sosial siyasətin funksiyaları sırasında göstərilməyib?",
+      "Xarici ticarətin tənzimlənməsi",
+      ["Proqnostik funksiya", "Sosial proseslərin idarə olunması", "Əhalinin sosial müdafiəsi"], 25),
+  ],
+  // ---- 13-cü sual (250 000 ₼) ----
+  [
+    Q("T. Hobbs, İ. Kant və G. Hegel sosial ədaləti nə saymışlar?",
+      "Danılmaz sosial və mənəvi dəyər", ["İqtisadi lüks", "Yalnız hüquqi norma", "Dini vəzifə"], 8),
+    Q("Sosial siyasətin təşəkkülünün əsasında hansı təsəvvürlər dururdu?",
+      "Mənəviyyat və din tərəfindən formalaşdırılan, ənənələrdə möhkəmlənmiş ədalətli cəmiyyət təsəvvürləri",
+      ["Bazar qanunlarından və iqtisadi hesablamalardan doğan təsəvvürlər",
+       "Hərbi qələbələr nəticəsində formalaşan təsəvvürlər",
+       "Beynəlxalq müqavilələrdən irəli gələn təsəvvürlər"], 6),
+    Q("O. Heffenin ifadəsinə görə ədalətli hüquq nə ilə müdafiə olunmalıdır?",
+      "İctimai asayişlə", ["Hərbi qüvvə ilə", "Beynəlxalq təşkilatlarla", "Dini icma ilə"], 8),
+    Q("BMT Bəyannaməsinə görə sosial tərəqqi və inkişafın məqsədi nədir?",
+      "İnsan haqlarına hörmət və əsas azadlıqları həyata keçirməklə cəmiyyətin bütün üzvlərinin maddi və mənəvi həyat səviyyəsini yaxşılaşdırmaq",
+      ["Dövlətin iqtisadi gücünü artırmaq və ixracı genişləndirmək, əsas azadlıqları məhdudlaşdırmaqla stabilliyi qorumaq",
+       "Əhalinin sayını artırmaq və məşğulluğu tam bərabərləşdirmək naminə istehsalı mərkəzləşdirmək",
+       "Sərhədləri möhkəmləndirmək və hərbi qüdrəti artırmaq yolu ilə cəmiyyətin təhlükəsizliyini təmin etmək"], 16),
+  ],
+  // ---- 14-cü sual (500 000 ₼) ----
+  [
+    Q("Sosial siyasətin funksiyalarından biri cəmiyyətin müxtəlif təbəqələrinin inteqrasiyası, ______, sabitliyin və asayişin qorunub saxlanılmasıdır. Boşluğu doldurun.",
+      "maraqlarının harmonizasiyası", ["maraqlarının məhdudlaşdırılması", "mülkiyyətin bərabərləşdirilməsi", "gəlirlərin dondurulması"], 25),
+    Q("Sosial ədalət hansı şüurun hamı tərəfindən qəbul edilən dəyərlərindən sayılır?",
+      "Müasir demokratik ictimai şüurun", ["Orta əsr feodal şüurunun", "Sinfi mübarizə şüurunun", "Hüquqşünasların peşə şüurunun"], 18),
+    Q("Sosial siyasətə daxil olan tədbirlər sisteminə aşağıdakılardan hansı daxil deyil?",
+      "Diplomatik nümayəndəliklərin təşkili",
+      ["Məşğulluğun təmin edilməsi", "Sosial konfliktlərin qarşısının alınması", "Gəlir və həyat səviyyəsinin yaxşılaşdırılması"], 13),
+    Q("Slaydlara görə sosial ədalət prinsipi ilə ayrılmaz surətdə bağlı olan prinsip hansıdır?",
+      "Fərdi sosial məsuliyyət", ["Sosial həmrəylik", "Sosial kompensasiya", "Subsidiya"], 20),
+  ],
+  // ---- 15-ci sual (1 000 000 ₼) ----
+  [
+    Q("Sosial siyasətin bir elm olaraq predmetini nə təşkil edir?",
+      "Cəmiyyətin xüsusiyyətləri, qanunauyğunluqları və ictimai praktikanın formaları",
+      ["Dövlətin xarici siyasət kursu və diplomatik münasibətlər", "Bazar qiymətləri və istehsal xərcləri", "Hərbi əməliyyatların planlaşdırılması və təchizat"], 17),
+    Q("Sosial cəhətdən problemli fərdlərin və təbəqələrin mövcudluğu əhalinin daha firavan hissəsində nəyi yaradır?",
+      "Narahatçılıq, bu da sosial gərginlik mənbəyinə çevrilir",
+      ["Etimad və sabitlik", "Sosial passivlik və laqeydlik", "Yeni investisiya marağı"], 19),
+    Q("Doyal və Gough-a görə əsas ehtiyacları müxtəlif yollarla ödəmək mümkün olsa da, nəyi müəyyən etmək mümkündür?",
+      "Orta ehtiyacların müəyyən «universal məqbul səciyyəsini»",
+      ["Bütün cəmiyyətlər üçün eyni xərc məbləğini", "Gəlirin mütləq minimum həddini", "Sosial müavinətlərin vahid məbləğini"], 11),
+    Q("Doyal və Gough-a görə fiziki cəhətdən yaşamaq üçün kifayət qədər sağlam olmaqla yanaşı nəyə də malik olmalıyıq?",
+      "Həyatımız üçün seçim imkanlarına", ["Yüksək təhsil dərəcəsinə", "Sabit gəlir mənbəyinə", "Siyasi vəzifəyə"], 11),
+  ],
+];
+</script>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------------- Sabitlər ---------------- */
+const PRIZES  = [100,200,300,500,1000,2000,4000,8000,16000,32000,64000,125000,250000,500000,1000000];
+const SAFE    = [5,10];          // sığortalı pillələr (sual nömrəsi)
+const TIME    = 15;              // saniyə
+const CIRC    = 276.46;          // taymer dairəsinin uzunluğu (2πr, r=44)
+const LETTERS = ['A','B','C','D'];
+const FRIENDS = ['Elçin','Aysel','Rəşad','Nərmin','Tural','Səbinə','Kənan','Leyla'];
+const SEEN_KEY  = 'milyoncu.sosial.seen.v1';
+const BEST_KEY  = 'milyoncu.sosial.best.v1';
+const SOUND_KEY = 'milyoncu.sosial.sound.v1';
+const TOTAL = BANK.reduce((n, lvl) => n + lvl.length, 0);
+
+/* ---------------- Yaddaş (localStorage, xəta olarsa yaddaşda) ---------------- */
+const mem = {};
+const store = {
+  get(k, d){
+    try { const v = window.localStorage.getItem(k); if (v !== null) return JSON.parse(v); } catch(e){}
+    return k in mem ? mem[k] : d;
+  },
+  set(k, v){
+    try { window.localStorage.setItem(k, JSON.stringify(v)); } catch(e){}
+    mem[k] = v;
+  }
+};
+
+/* ---------------- Köməkçi funksiyalar ---------------- */
+const $  = s => document.querySelector(s);
+const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') + '\u00a0₼';
+const rnd = (a, b) => a + Math.random() * (b - a);
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function shuffle(a){
+  a = a.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+const guaranteed = lvl => { let g = 0; for (const s of SAFE) if (s < lvl) g = PRIZES[s - 1]; return g; };
+
+const pending = new Set();
+function later(fn, ms){ const id = setTimeout(() => { pending.delete(id); fn(); }, ms); pending.add(id); return id; }
+function clearLater(){ pending.forEach(clearTimeout); pending.clear(); }
+
+/* ---------------- DOM ---------------- */
+const els = {
+  screens: { start: $('#screen-start'), game: $('#screen-game'), end: $('#screen-end') },
+  bankInfo: $('#bankInfo'),
+  qtext: $('#qtext'), qn: $('#qn'), qp: $('#qp'), src: $('#src'),
+  timer: $('#timer'), tbar: $('#tbar'), tnum: $('#tnum'),
+  ladder: $('#ladder'), ladderList: $('#ladderList'),
+  banner: $('#banner'), modal: $('#modal'), modalBody: $('#modalBody'), sr: $('#sr'),
+  ll: { fifty: $('#llFifty'), phone: $('#llPhone'), aud: $('#llAud') },
+  btnWalk: $('#btnWalk'), btnSound: $('#btnSound'),
+  confetti: $('#confetti')
+};
+const slots = [...document.querySelectorAll('.arow .slot')];
+
+/* ---------------- Səs (WebAudio, fayl tələb etmir) ---------------- */
+const Sound = (() => {
+  let ctx = null, on = store.get(SOUND_KEY, true), hb = null, rg = null;
+  function ensure(){
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      try { ctx = new AC(); } catch(e){ return null; }
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
+  function tone(f, d, type = 'sine', v = .12, delay = 0, f2){
+    if (!on) return;
+    const c = ensure(); if (!c) return;
+    const t = c.currentTime + delay, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(v, t + .02);
+    g.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(g); g.connect(c.destination);
+    o.start(t); o.stop(t + d + .05);
+  }
+  const api = {
+    get on(){ return on; },
+    unlock(){ if (on) ensure(); },
+    toggle(){ on = !on; store.set(SOUND_KEY, on); if (!on) api.stopAll(); else ensure(); return on; },
+    start(){ [261.6, 329.6, 392, 523.3].forEach((f, i) => tone(f, .7, 'triangle', .12, i * .09)); },
+    lock(){ tone(98, .6, 'sawtooth', .1); tone(147, .6, 'sine', .08); },
+    beatStart(){
+      api.beatStop();
+      const beat = () => { tone(62, .22, 'sine', .28); tone(62, .22, 'sine', .18, .2); };
+      beat(); hb = setInterval(beat, 720);
+    },
+    beatStop(){ if (hb) { clearInterval(hb); hb = null; } },
+    correct(){ [523.3, 659.3, 784, 1046.5].forEach((f, i) => tone(f, i === 3 ? .7 : .2, 'triangle', .16, i * .12)); },
+    wrong(){ tone(330, .9, 'sawtooth', .12, 0, 80); },
+    tick(){ tone(1200, .04, 'square', .035); },
+    fifty(){ tone(720, .25, 'triangle', .12, 0, 260); },
+    audience(){ [392, 494, 587].forEach((f, i) => tone(f, .25, 'triangle', .1, i * .1)); },
+    ringStart(){
+      api.ringStop();
+      const ring = () => { tone(440, .38, 'sine', .1); tone(480, .38, 'sine', .1); tone(440, .38, 'sine', .1, .5); tone(480, .38, 'sine', .1, .5); };
+      ring(); rg = setInterval(ring, 1300);
+    },
+    ringStop(){ if (rg) { clearInterval(rg); rg = null; } },
+    win(){ [523.3, 659.3, 784, 1046.5, 784, 1046.5, 1318.5].forEach((f, i) => tone(f, .3, 'triangle', .16, i * .16)); },
+    stopAll(){ api.beatStop(); api.ringStop(); }
+  };
+  return api;
+})();
+
+/* ---------------- Sual seçimi (təkrarsız) ---------------- */
+function seenList(){ const s = store.get(SEEN_KEY, []); return Array.isArray(s) ? s : []; }
+const keyOf = (li, i) => 'L' + li + ':' + i;
+
+function pickQuestions(){
+  const seen = seenList();
+  return BANK.map((pool, li) => {
+    let avail = pool.map((_, i) => i).filter(i => !seen.includes(keyOf(li, i)));
+    let reset = false;
+    if (!avail.length) { avail = pool.map((_, i) => i); reset = true; }
+    const i = pick(avail);
+    return Object.assign({ level: li + 1, li, idx: i, reset }, pool[i]);
+  });
+}
+function markSeen(q){
+  let seen = seenList();
+  if (q.reset) { seen = seen.filter(k => !k.startsWith('L' + q.li + ':')); q.reset = false; }
+  const k = keyOf(q.li, q.idx);
+  if (!seen.includes(k)) seen.push(k);
+  store.set(SEEN_KEY, seen);
+}
+function updateStart(){
+  const seen = seenList().length;
+  els.bankInfo.textContent = 'Sual bazasında ' + TOTAL + ' sual var. Bu dövrdə görülən suallar: ' + seen + ' / ' + TOTAL + '.';
+}
+
+/* ---------------- Oyun vəziyyəti ---------------- */
+const G = { qs: [], i: 0, opts: [], removed: [], locked: true, over: true, modal: false, ll: {}, last: null };
+
+function show(name){
+  Object.entries(els.screens).forEach(([k, el]) => el.classList.toggle('active', k === name));
+  window.scrollTo(0, 0);
+}
+function announce(msg){ els.sr.textContent = ''; setTimeout(() => { els.sr.textContent = msg; }, 30); }
+function banner(text, kind){ els.banner.textContent = text; els.banner.className = 'banner show ' + (kind || ''); }
+function hideBanner(){ els.banner.className = 'banner'; }
+
+/* ---------------- Taymer ---------------- */
+const T = { left: TIME, end: 0, running: false, raf: 0, shown: TIME + 1 };
+function renderTimer(){
+  const s = Math.ceil(T.left);
+  els.tnum.textContent = s;
+  els.tbar.style.strokeDashoffset = String(CIRC * (1 - T.left / TIME));
+  els.timer.classList.toggle('warn', s <= 8 && s > 5);
+  els.timer.classList.toggle('crit', s <= 5);
+}
+function loop(){
+  if (!T.running) return;
+  T.left = Math.max(0, (T.end - Date.now()) / 1000);
+  const s = Math.ceil(T.left);
+  if (s !== T.shown) { T.shown = s; if (s <= 5 && s > 0) Sound.tick(); }
+  renderTimer();
+  if (T.left <= 0) { T.running = false; timeUp(); return; }
+  T.raf = requestAnimationFrame(loop);
+}
+function startTimer(){ T.left = TIME; T.shown = TIME + 1; renderTimer(); resumeTimer(); }
+function resumeTimer(){
+  if (T.running || G.locked || G.over) return;
+  T.running = true; T.end = Date.now() + T.left * 1000;
+  T.raf = requestAnimationFrame(loop);
+}
+function pauseTimer(){
+  if (!T.running) return;
+  T.running = false; cancelAnimationFrame(T.raf);
+  T.left = Math.max(0, (T.end - Date.now()) / 1000);
+}
+
+/* ---------------- Pul pilləkəni ---------------- */
+function buildLadder(){
+  els.ladderList.innerHTML = '';
+  PRIZES.forEach((p, i) => {
+    const li = document.createElement('li');
+    if (SAFE.includes(i + 1)) li.classList.add('safe');
+    li.innerHTML = '<span class="n">' + (i + 1) + '</span><span class="p">' + fmt(p) + '</span>';
+    els.ladderList.appendChild(li);
+  });
+}
+function updateLadder(){
+  [...els.ladderList.children].forEach((li, i) => {
+    li.classList.toggle('cur', i === G.i);
+    li.classList.toggle('done', i < G.i);
+  });
+}
+
+/* ---------------- Oyunun gedişi ---------------- */
+function startGame(){
+  clearLater(); Sound.stopAll(); pauseTimer(); closeModal(false); hideBanner();
+  els.confetti.innerHTML = ''; els.ladder.classList.remove('open');
+  Sound.unlock();
+  G.qs = pickQuestions(); G.i = 0; G.over = false; G.locked = false; G.modal = false;
+  G.ll = { fifty: true, phone: true, aud: true };
+  buildLadder(); show('game'); Sound.start();
+  showQuestion();
+}
+
+function showQuestion(){
+  const q = G.qs[G.i];
+  hideBanner();
+  G.locked = false; G.removed = [];
+  G.opts = shuffle(q.a.map((t, k) => ({ t, ok: k === 0 })));
+  G.last = { q: q.q, ok: q.a[0], s: q.s, picked: null };
+  els.qtext.textContent = q.q;
+  slots.forEach((s, k) => {
+    s.className = 'slot';
+    s.querySelector('.t').textContent = G.opts[k].t;
+    s.querySelector('button').disabled = false;
+  });
+  els.src.textContent = '';
+  els.qn.textContent = 'Sual ' + (G.i + 1) + ' / 15';
+  els.qp.textContent = fmt(PRIZES[G.i]);
+  els.btnWalk.disabled = G.i === 0;
+  updateLadder(); refreshLL(); markSeen(q);
+  announce('Sual ' + (G.i + 1) + '. ' + q.q);
+  startTimer();
+}
+
+function refreshLL(){
+  Object.keys(els.ll).forEach(k => {
+    const b = els.ll[k];
+    b.classList.toggle('used', !G.ll[k]);
+    b.disabled = !G.ll[k] || G.locked || G.over;
+  });
+  els.btnWalk.disabled = G.locked || G.over || G.i === 0;
+}
+
+function lockSlots(){
+  slots.forEach(s => { s.classList.add('locked'); s.querySelector('button').disabled = true; });
+}
+
+function choose(i){
+  if (G.locked || G.over || G.modal || G.removed.includes(i)) return;
+  G.locked = true; pauseTimer(); refreshLL(); lockSlots();
+  G.last.picked = G.opts[i].t;
+  slots[i].classList.add('sel');
+  Sound.lock(); Sound.beatStart();
+  announce('Cavab ' + LETTERS[i] + ' seçildi.');
+  later(() => reveal(i), 2000);
+}
+
+function reveal(i){
+  Sound.beatStop();
+  const okIdx = G.opts.findIndex(o => o.ok);
+  const lvl = G.i + 1;
+  slots[i].classList.remove('sel');
+  els.src.textContent = 'Mənbə: Mövzu 1, slayd ' + G.last.s;
+  if (i === okIdx) {
+    slots[i].classList.add('correct');
+    if (lvl === 15) {
+      Sound.win(); banner('Düzgün cavab!');
+      later(() => endGame('win'), 2400);
+      return;
+    }
+    Sound.correct();
+    if (SAFE.includes(lvl)) banner('Sığortalı məbləğ: ' + fmt(PRIZES[lvl - 1]));
+    else banner('Düzgün cavab!');
+    announce('Düzgün cavab.');
+    later(() => { G.i++; showQuestion(); }, SAFE.includes(lvl) ? 2800 : 2100);
+  } else {
+    slots[i].classList.add('wrong');
+    slots[okIdx].classList.add('correct');
+    Sound.wrong(); banner('Səhv cavab', 'bad');
+    announce('Səhv cavab. Düzgün cavab: ' + LETTERS[okIdx] + '.');
+    later(() => endGame('wrong'), 2800);
+  }
+}
+
+function timeUp(){
+  if (G.locked || G.over) return;
+  G.locked = true; refreshLL(); lockSlots();
+  const okIdx = G.opts.findIndex(o => o.ok);
+  slots[okIdx].classList.add('correct');
+  els.src.textContent = 'Mənbə: Mövzu 1, slayd ' + G.last.s;
+  Sound.wrong(); banner('Vaxt bitdi!', 'bad');
+  announce('Vaxt bitdi.');
+  later(() => endGame('timeout'), 2800);
+}
+
+/* ---------------- Yardımlar ---------------- */
+const canLL = k => G.ll[k] && !G.locked && !G.over && !G.modal;
+
+function useFifty(){
+  if (!canLL('fifty')) return;
+  G.ll.fifty = false;
+  const wrongs = [0, 1, 2, 3].filter(i => !G.opts[i].ok);
+  G.removed = shuffle(wrongs).slice(0, 2);
+  G.removed.forEach(i => { slots[i].classList.add('removed'); slots[i].querySelector('button').disabled = true; });
+  refreshLL(); Sound.fifty();
+  announce('50:50. İki səhv cavab silindi.');
+}
+
+function friendAdvice(){
+  const lvl = G.i + 1;
+  const vis = [0, 1, 2, 3].filter(i => !G.removed.includes(i));
+  const okIdx = G.opts.findIndex(o => o.ok);
+  const w = lvl <= 5 ? [.7, .25, .05] : lvl <= 10 ? [.3, .45, .25] : [.1, .35, .55];
+  const r = Math.random();
+  const conf = r < w[0] ? 'high' : r < w[0] + w[1] ? 'mid' : 'low';
+  const pOk = { high: .93, mid: .72, low: .5 }[conf];
+  const idx = Math.random() < pOk ? okIdx : pick(vis.filter(i => i !== okIdx));
+  const L = LETTERS[idx], T_ = G.opts[idx].t;
+  const say = {
+    high: [
+      'Salam! Bunu dəqiq bilirəm. Cavab ' + L + ': «' + T_ + '».',
+      'Əlbəttə bilirəm, dərsdə keçmişdik. ' + L + ' variantıdır: «' + T_ + '».'
+    ],
+    mid: [
+      'Məncə ' + L + ' variantıdır: «' + T_ + '». Təxminən 70–80% əminəm.',
+      'Bir az tərəddüd edirəm, amma ' + L + ' deyərdim: «' + T_ + '».'
+    ],
+    low: [
+      'Vallah, tam əmin deyiləm… Amma ' + L + ' variantına meyl edirəm: «' + T_ + '».',
+      'Çətin sualdır. Yəqin ki, ' + L + ' («' + T_ + '»), amma risk sənindir!'
+    ]
+  };
+  return pick(say[conf]);
+}
+
+const PHONE_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>';
+
+function usePhone(){
+  if (!canLL('phone')) return;
+  G.ll.phone = false; refreshLL(); pauseTimer();
+  const name = pick(FRIENDS);
+  openModal('<div class="ringer">' + PHONE_SVG + '</div><h3>Dost ' + esc(name) + ' ilə əlaqə qurulur…</h3>');
+  Sound.ringStart();
+  later(() => {
+    Sound.ringStop();
+    const msg = friendAdvice();
+    els.modalBody.innerHTML =
+      '<h3>Dost ' + esc(name) + ' cavab verdi</h3>' +
+      '<p class="bubble"><b>' + esc(name) + ':</b>' + esc(msg) + '</p>' +
+      '<button class="cta small" id="mOk" type="button">Davam et</button>';
+    $('#mOk').addEventListener('click', () => closeModal(true));
+    $('#mOk').focus();
+    announce('Dost ' + name + ': ' + msg);
+  }, 2600);
+}
+
+function audienceDist(level, vis){
+  const okI = G.opts.findIndex(o => o.ok);
+  const t = (level - 1) / 14;
+  let c = .84 - .48 * t + rnd(-.07, .07);
+  const pm = t < .35 ? 0 : t < .7 ? .08 : .2;
+  const mislead = Math.random() < pm;
+  if (mislead) c = rnd(.2, .3);
+  if (vis.length === 2) c = mislead ? rnd(.38, .47) : c + (1 - c) * .55;
+  c = Math.min(.94, Math.max(.1, c));
+  const wrongs = vis.filter(i => i !== okI);
+  const w = wrongs.map(() => rnd(.3, 1));
+  if (mislead && wrongs.length > 1) w[Math.floor(Math.random() * w.length)] += 1.6;
+  const sw = w.reduce((a, b) => a + b, 0);
+  const raw = [0, 0, 0, 0];
+  raw[okI] = c * 100;
+  wrongs.forEach((i, k) => { raw[i] = (1 - c) * 100 * w[k] / sw; });
+  const fl = raw.map(Math.floor);
+  const rem = 100 - fl.reduce((a, b) => a + b, 0);
+  const order = raw.map((v, i) => [v - Math.floor(v), i]).sort((a, b) => b[0] - a[0]);
+  for (let k = 0; k < rem; k++) fl[order[k % 4][1]]++;
+  return fl;
+}
+
+function useAudience(){
+  if (!canLL('aud')) return;
+  G.ll.aud = false; refreshLL(); pauseTimer();
+  const vis = [0, 1, 2, 3].filter(i => !G.removed.includes(i));
+  const d = audienceDist(G.i + 1, vis);
+  openModal(
+    '<h3>Auditoriyanın səsi</h3><div class="bars">' +
+    [0, 1, 2, 3].map(i => {
+      const on = vis.includes(i);
+      return '<div class="bcol' + (on ? '' : ' off') + '"><span class="pct">' + (on ? d[i] + '%' : '—') + '</span>' +
+             '<div class="bar"><i data-h="' + d[i] + '"></i></div><b>' + LETTERS[i] + '</b></div>';
+    }).join('') +
+    '</div><button class="cta small" id="mOk" type="button">Davam et</button>'
+  );
+  Sound.audience();
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    els.modalBody.querySelectorAll('.bar i').forEach(el => { el.style.height = el.dataset.h + '%'; });
+  }));
+  $('#mOk').addEventListener('click', () => closeModal(true));
+  $('#mOk').focus();
+  announce('Auditoriya: ' + vis.map(i => LETTERS[i] + ' ' + d[i] + ' faiz').join(', '));
+}
+
+function askWalk(){
+  if (G.locked || G.over || G.modal || G.i === 0) return;
+  pauseTimer();
+  const amt = PRIZES[G.i - 1];
+  openModal(
+    '<h3>Pulu götürürsünüz?</h3>' +
+    '<p>Oyunu indi bitirsəniz <strong>' + fmt(amt) + '</strong> qazanacaqsınız.</p>' +
+    '<div class="btnrow"><button class="cta small" id="mWalk" type="button">Pulu götür</button>' +
+    '<button class="ghost" id="mStay" type="button">Oyuna davam et</button></div>'
+  );
+  $('#mWalk').addEventListener('click', () => { closeModal(false); endGame('walk'); });
+  $('#mStay').addEventListener('click', () => closeModal(true));
+  $('#mStay').focus();
+}
+
+/* ---------------- Modal ---------------- */
+function openModal(html){
+  els.modalBody.innerHTML = html; els.modal.hidden = false; G.modal = true;
+}
+function closeModal(resume){
+  Sound.ringStop();
+  els.modal.hidden = true; G.modal = false; els.modalBody.innerHTML = '';
+  if (resume) resumeTimer();
+}
+
+/* ---------------- Oyunun sonu ---------------- */
+function endGame(kind){
+  G.over = true; G.locked = true; pauseTimer(); Sound.stopAll(); closeModal(false); hideBanner();
+  const lvl = G.i + 1;
+  const correct = kind === 'win' ? 15 : G.i;
+  let amount, title, text;
+  if (kind === 'win') {
+    amount = PRIZES[14]; title = 'Təbriklər! Siz milyonçu oldunuz!';
+    text = '15 sualın hamısını düzgün cavablandırdınız.';
+  } else if (kind === 'walk') {
+    amount = PRIZES[G.i - 1]; title = 'Pulu götürdünüz';
+    text = correct + ' sual düzgün cavablandırıldı. Riskə getmədiniz və qazancınızı qoruyub saxladınız.';
+  } else {
+    amount = guaranteed(lvl);
+    title = kind === 'timeout' ? 'Vaxt bitdi' : 'Səhv cavab';
+    text = correct + ' sual düzgün cavablandırıldı. ' + (amount > 0
+      ? 'Sığortalanmış məbləğ sizdə qalır.'
+      : 'Bu dəfə sığortalanmış məbləğ yoxdur, amma yenidən cəhd edə bilərsiniz.');
+  }
+  $('#endTitle').textContent = title;
+  $('#endAmount').textContent = fmt(amount);
+  $('#endText').textContent = text;
+
+  const rev = $('#endReview');
+  if (kind === 'wrong' || kind === 'timeout') {
+    rev.hidden = false;
+    rev.innerHTML =
+      '<p><small>Sual ' + lvl + '</small><br>' + esc(G.last.q) + '</p>' +
+      (G.last.picked ? '<p class="no">Sizin cavabınız: ' + esc(G.last.picked) + '</p>' : '') +
+      '<p class="ok">Düzgün cavab: ' + esc(G.last.ok) + '</p>' +
+      '<p><small>Mənbə: Mövzu 1, slayd ' + G.last.s + '</small></p>';
+  } else { rev.hidden = true; rev.innerHTML = ''; }
+
+  const best = store.get(BEST_KEY, 0);
+  if (amount > best) store.set(BEST_KEY, amount);
+  $('#endBest').textContent = 'Ən yaxşı nəticə: ' + fmt(Math.max(best, amount));
+
+  show('end');
+  if (kind === 'win') { launchConfetti(); }
+  $('#endTitle').setAttribute('tabindex', '-1'); $('#endTitle').focus({ preventScroll: true });
+}
+
+function launchConfetti(){
+  const colors = ['#ffd35c', '#ff9d1c', '#7f90ff', '#25c45f', '#ffffff', '#e04a52'];
+  els.confetti.innerHTML = '';
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement('span');
+    s.style.left = rnd(0, 100) + '%';
+    s.style.background = pick(colors);
+    s.style.setProperty('--dx', rnd(-120, 120) + 'px');
+    s.style.animationDuration = rnd(2.6, 5) + 's';
+    s.style.animationDelay = rnd(0, 1.6) + 's';
+    els.confetti.appendChild(s);
+  }
+}
+
+/* ---------------- Hadisələr ---------------- */
+$('#btnStart').addEventListener('click', startGame);
+$('#btnAgain').addEventListener('click', startGame);
+$('#btnHome').addEventListener('click', () => { els.confetti.innerHTML = ''; updateStart(); show('start'); });
+$('#btnResetBank').addEventListener('click', () => { store.set(SEEN_KEY, []); updateStart(); });
+els.ll.fifty.addEventListener('click', useFifty);
+els.ll.phone.addEventListener('click', usePhone);
+els.ll.aud.addEventListener('click', useAudience);
+els.btnWalk.addEventListener('click', askWalk);
+slots.forEach((s, i) => s.querySelector('button').addEventListener('click', () => choose(i)));
+$('#btnLadder').addEventListener('click', () => els.ladder.classList.add('open'));
+$('#btnCloseLadder').addEventListener('click', () => els.ladder.classList.remove('open'));
+els.btnSound.addEventListener('click', () => {
+  const on = Sound.toggle();
+  els.btnSound.textContent = on ? 'Səs: açıq' : 'Səs: bağlı';
+  els.btnSound.setAttribute('aria-pressed', String(on));
+});
+document.addEventListener('keydown', e => {
+  if (!els.screens.game.classList.contains('active') || G.locked || G.over || G.modal) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const map = { a: 0, b: 1, c: 2, d: 3, '1': 0, '2': 1, '3': 2, '4': 3 };
+  const k = e.key.toLowerCase();
+  if (k in map) { e.preventDefault(); choose(map[k]); }
+});
+
+/* Başlanğıc */
+els.btnSound.textContent = Sound.on ? 'Səs: açıq' : 'Səs: bağlı';
+els.btnSound.setAttribute('aria-pressed', String(Sound.on));
+updateStart();
+})();
+</script>
+</body>
+</html>
